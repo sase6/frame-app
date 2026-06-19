@@ -279,6 +279,7 @@ class Launcher:
 def build_apps() -> list[App]:
     return [
         App("Album", ASSET_DIR / "album.png"),
+        App("Uploader", ASSET_DIR / "uploader.png"),
         App("Settings", ASSET_DIR / "settings.png"),
     ]
 
