@@ -1,2 +1,7 @@
-# User assets
-album
+# Local runtime data — persists across syncs, never committed
+album/
+settings.json
+
+# Python cruft
+__pycache__/
+*.pyc

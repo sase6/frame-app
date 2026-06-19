@@ -32,4 +32,16 @@ git reset --hard "origin/$BRANCH"
 echo "Removing untracked files & directories (keeping $SELF)..."
 git clean -fd -e "$SELF"
 
+# Ensure local data files exist. These are gitignored, so the clean step
+# above leaves them untouched and they persist across syncs — we only
+# create them the first time, or if they were manually removed.
+if [[ ! -d album ]]; then
+  echo "Creating album/ folder..."
+  mkdir -p album
+fi
+if [[ ! -f settings.json ]]; then
+  echo "Creating settings.json..."
+  echo '{}' > settings.json
+fi
+
 echo "Done. Now at: $(git rev-parse --short HEAD) $(git log -1 --format=%s)"
