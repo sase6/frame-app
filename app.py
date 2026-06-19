@@ -238,7 +238,8 @@ class Launcher:
         self.apps = apps
         self.display = display
         self.home = HomeScreen(apps, SCREEN_W, SCREEN_H)
-        self.selected = 0
+        # Start focused on the second app (Uploader) when present.
+        self.selected = 1 if len(apps) > 1 else 0
         self._lock = threading.Lock()
 
         self._encoder = RotaryEncoder(CLK_PIN, DT_PIN, max_steps=0)
@@ -249,7 +250,7 @@ class Launcher:
         self._button.when_pressed = self._select
 
     def start(self) -> None:
-        self._redraw()  # draw the initial home screen (Album focused)
+        self._redraw()  # draw the initial home screen (Uploader focused)
 
     def _move(self, delta: int) -> None:
         with self._lock:
