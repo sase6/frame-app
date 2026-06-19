@@ -12,8 +12,6 @@ import threading
 from PIL import Image
 from waveshare_epd import epd2in13_V4
 
-from . import config
-
 
 class EInkDisplay:
     def __init__(self) -> None:
@@ -22,7 +20,6 @@ class EInkDisplay:
         self._force_full = False
         self._wake = threading.Event()
         self._running = True
-        self._refresh_count = 0
         self._thread = threading.Thread(target=self._run, daemon=True)
 
     def start(self) -> None:
@@ -45,22 +42,19 @@ class EInkDisplay:
         while self._running:
             self._wake.wait()
             self._wake.clear()
-            image = self._latest
-            if image is not None:
-                self._draw(image)
+            if not self._running:
+                break
+            if self._latest is not None:
+                full, self._force_full = self._force_full, False
+                self._draw(self._latest, full)
 
-    def _draw(self, image: Image.Image) -> None:
+    def _draw(self, image: Image.Image, full: bool) -> None:
         buffer = self._epd.getbuffer(image)
-        # Full refresh when forced, on the first draw, or periodically to keep
-        # ghosting from building up; otherwise use the fast partial path.
-        full = self._force_full or (self._refresh_count % config.FULL_REFRESH_EVERY == 0)
-        self._force_full = False
         if full:
             self._epd.display(buffer)
             self._epd.displayPartBaseImage(buffer)  # reset partial baseline
         else:
             self._epd.displayPartial(buffer)
-        self._refresh_count += 1
 
     def close(self) -> None:
         self._running = False

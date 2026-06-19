@@ -26,10 +26,11 @@ SW_PIN = 22
 # Panel size in landscape orientation (pixels).
 SCREEN_W, SCREEN_H = 250, 122
 
-# How often a slow full refresh runs to clear e-ink "ghosting": every Nth
-# in-screen update is a full refresh, the rest are fast partial refreshes.
-# (Screen transitions always force a full refresh - see Navigator.)
-FULL_REFRESH_EVERY = 15
+# In-screen updates (knob spins, counter ticks) use fast partial refreshes,
+# which never flash but leave faint "ghosting". The only flash is a full
+# refresh, and it happens solely on screen transitions (see Navigator) - a
+# deliberate moment where a brief flash reads as "new screen" and also scrubs
+# any ghosting the previous screen left behind.
 
 # --------------------------------------------------------------------------
 # Fonts
